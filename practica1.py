@@ -7,6 +7,9 @@
 # ---------------------------------
 
 import webapp
+import csv
+import os
+from pathlib import Path
 from urllib.request import urlopen
 from urllib.parse import unquote
 
@@ -14,6 +17,23 @@ from urllib.parse import unquote
 class acortadoraUrls(webapp.webApp):
     # Heredo de la clase webApp
     urls = []
+
+    def leer(self, archivo):
+        miruta = os.getcwd()
+        rutacompleta = Path(miruta + "/" + archivo)
+        if rutacompleta.is_file():
+            with open(archivo, newline='') as csvfile:
+                lector = csv.reader(csvfile, delimiter=' ', quotechar='"')
+                for fila in lector:
+                    self.urls.append(fila[0])
+
+    def escribir(self, archivo, urls):
+        with open(archivo, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=' ',
+                                    quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for i in self.urls:
+                writer.writerow([i])
+        csvfile.close()
 
     def dameHTMLformulario(self):
         formulario = "<form method='POST'>Introduce URL: "
@@ -110,7 +130,7 @@ class acortadoraUrls(webapp.webApp):
                         HTTPCode = "404 Not Found"
                         html = '<html><body>'
                         html += "<h2>Recurso '" + str(recurso)
-                        html += "' no encontrado</h2>"
+                        html += "' no disponible</h2>"
                         html += "<a href='http://" + self.hostname + ":"
                         html += str(self.port) + "'>"
                         html += "Volver</a>"
@@ -132,10 +152,13 @@ class acortadoraUrls(webapp.webApp):
     def __init__(self, hostname, port):
         self.hostname = hostname
         self.port = port
-        webapp.webApp.__init__(self, hostname, port)
+        self.archivo = "urls.csv"
+        self.leer(self.archivo)
+        try:
+            webapp.webApp.__init__(self, hostname, port)
+        except KeyboardInterrupt:
+            self.escribir(self.archivo, self.urls)
+            print("Server closed")
 
 if __name__ == "__main__":
-    try:
-        test = acortadoraUrls("localhost", 1234)
-    except KeyboardInterrupt:
-        print("Server closed")
+    test = acortadoraUrls("localhost", 1234)

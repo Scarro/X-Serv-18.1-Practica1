@@ -96,7 +96,6 @@ class acortadoraUrls(webapp.webApp):
                     urls = len(self.urls)
                     if urls > 0 and recurso > 0 and recurso <= urls:
                         HTTPCode = "307 Temporaly Redirect\n"
-                        print("ASDASDASDASDASDASDASDASDASD")
                         HTTPCode += "Location:" + self.urls[recurso-1]
                         html = ""
                     else:

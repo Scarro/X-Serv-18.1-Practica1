@@ -64,7 +64,7 @@ class webApp:
             except KeyboardInterrupt:
                 break
         mySocket.close()
-        print("Server closed")
+        print("Server ended")
 
 if __name__ == "__main__":
     testWebApp = webApp("localhost", 1234)

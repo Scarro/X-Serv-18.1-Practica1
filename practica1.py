@@ -10,6 +10,7 @@ import webapp
 from urllib.request import urlopen
 from urllib.parse import unquote
 
+
 class acortadoraUrls(webapp.webApp):
     # Heredo de la clase webApp
     urls = []
@@ -31,20 +32,21 @@ class acortadoraUrls(webapp.webApp):
                 posicion = posicion+1
                 html += "<li><a href='" + i + "'>" + i + "</a>"
                 html += " ==> Acortada: "
-                html += "<a href='" + i + "'>http://localhost:1234/" + str(posicion) + "</a></li></br>"
+                html += "<a href='" + i + "'>http://localhost:1234/"
+                html += str(posicion) + "</a></li></br>"
             html += "</ul>"
         return html
 
-    def dameHTMLprincipal(self,valida):
+    def dameHTMLprincipal(self, valida):
         HTTPcode = "200 OK"
         html = "<html><body><h1>Acortadora de URLS</h1>"
         html += self.dameHTMLformulario()
         if valida == 0:
-            html += "<h3>No se ha introducido una URL valida, vuelve a intentarlo</h3>"
+            html += "<h3>No se ha introducido una URL valida"
+            html += ", vuelve a intentarlo</h3>"
         html += self.dameHTMLurls()
         html += "</body></html>"
         return (HTTPcode, html)
-
 
     def compruebaUrl(self, url):
         try:
@@ -109,14 +111,15 @@ class acortadoraUrls(webapp.webApp):
                         html = '<html><body>'
                         html += "<h2>Recurso '" + str(recurso)
                         html += "' no encontrado</h2>"
-                        html += "<a href='http://" + self.hostname + ":" + str(self.port) + "'>"
+                        html += "<a href='http://" + self.hostname + ":"
+                        html += str(self.port) + "'>"
                         html += "Volver</a>"
                         html += "</body></html>"
                     return (HTTPCode, html)
             (HTTPCode, html) = self.dameHTMLprincipal(urlvalida)
 
         if metodo == "POST":
-            (existe,url) = self.existeUrl(cuerpo);
+            (existe, url) = self.existeUrl(cuerpo)
             if existe:
                 cuerpo = url
                 if cuerpo not in self.urls:
